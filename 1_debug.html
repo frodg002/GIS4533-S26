@@ -41,9 +41,13 @@
     <!-- start of our CSS styles -->
     <style>
         h1 {
-            color: white;
+            /* ERROR. I noticed since the text was white, it would be blend in with the background
+               Changed text color to black */
+           color: black;  
         }
-        .map {
+        /* ERROR: Originally ".map" which references multiple elements. 
+           Switched to '#' to style single ID 'map' */
+        #map {
             border: 4px solid red;
         }
     </style>
@@ -52,25 +56,32 @@
     <!-- Header at the top of the page -->
     <div class="header">
         <h1>A Working Web Map</h1>
+        <h2>(Hopefully)</h2>
     </div>
     
-    <div id="map" style="width: 600px; height: 400px;"></div>
-    
+    <div id="map" style="width: 600px; height: 400px;">
+    </div>
+
+    <!-- Leaflet JavaScript library -->
+    <!-- ERROR: Moved this library above Javascript code so it can be referenced -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <!-- start of our JavaScript code -->
     <script>
         // Initialize the map
-        let map = L.map('mapElement')
+        // ERROR. Console tab showed a reference error on line 63 - "L is not defined".
+        // Element ID did not match the ID created: 'mapElement' --> 'map'
+        let map = L.map('map')  
         // Center the map on UMD campus, and set the zoom level
-        map.setView([-92.08, 46.82], 15);
+        // ERROR: When finding more precise coordinates for UMD, I noticed the provided lat and long were flipped.
+        map.setView([46.818667, -92.082917], 15);
         
         // Add OpenStreetMap tiles
-        const tiles = L.tileLayer('https://tile.openstreetmap.orgg/{z}/{x}/{y}.png', {
+        const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
     </script>
         
-    <!-- Leaflet JavaScript library -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
