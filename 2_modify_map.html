@@ -18,56 +18,108 @@
 
     AI use: you can ask questions of AI (such as "explain what this line of code does" or "how do I create a popup in Leaflet?") 
     But try and write the code yourself. 
-    //Change
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Most Basic Web Map</title>
+    <title>Great Views Around Duluth</title>
     
     <!-- Leaflet CSS stylesheet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <style></style>
+    <!-- Style Changes -->
+    <style>
+        /* Sets the font color */
+        h1, h2, h3, h4 {
+            color: white;
+        }
+        /* Add border around map */
+        #map {
+            border: 4px solid black;
+            margin-top: 150px;
+            margin-left: 340px;
+        } 
+        /* Add background to web page */
+        body {
+            background-image: url("https://duluthpassport.com/wp-lib/wp-content/uploads/2024/03/AdobeStock_233302387-scaled.jpeg");
+            background-size: cover;
+            background-attachment: fixed; 
+            background-position: center; 
+        }
+        /* Add background to description of map */
+        .description {
+        padding: 6px 8px;
+        font: 14px Arial, Helvetica, sans-serif;
+        background: rgba(177, 173, 173, 0.80);
+        border-radius: 5px;
+    }
+    </style>
 </head>
 <body>
     <!-- Header at the top of the page -->
     <div class="header">
-        <h1>A Mostly Basic Web Map</h1>
-        <h3>by: Your Name Here</h3>
+        <h1 style="font-family: monospace, serif; font-size: 80px; text-align: center;">Great Views Around Duluth</h1>
+        <h3 style="font-family: monospace, serif; text-align: center;">by: William Frodge</h3>
+        <h2 style="font-family: monospace, serif; text-align: center; margin-top: 435px;">Scroll down to see map</h2>
     </div>
-    <div id="map" style="width: 600px; height: 400px;"></div>
+
+    <!-- Dimensions of map -->
+    <div id="map" style="width: 800px; height: 600px;"></div>
     
     <!-- Leaflet JavaScript library -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
         // Initialize the map, center it on UMD campus, and set the zoom level
-        const map = L.map('map').setView([46.78355, -92.10594], 13);
+        const map = L.map('map').setView([46.78355, -92.10594], 14);
 
-        // Add OPNVKarte tiles
-        var OPNVKarte = L.tileLayer('https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map <a href="https://memomaps.de/">memomaps.de</a> <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // Add Esri National Geographic tiles
+        var Esri_NatGeoWorldMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	        attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+	        maxZoom: 16
         }).addTo(map);
-        //var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-	    //maxZoom: 17,
-	    //attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-        //}).addTo(map);
 
-        // Add a marker for Enger Park
+        // Create marker for Enger Park
         const markerEnger = L.marker([46.775750, -92.124361]).addTo(map);
-        markerEnger.bindPopup("<b>Enger Park</b><br>Amazing views! It was dedicated by Norwegian royalty!").openPopup();
+        // Text content for Enger Park
+        const textContent = "<b>Enger Park</b><br>Prominent point in Duluth with a 360 view.<br>It was dedicated by Norwegian royalty!"
+        // Video Content for Enger Park
+        var videoContent = `<iframe width="320" height="250" src="https://www.youtube.com/embed/hbk8EGAXAyo?si=Pj25nLwuYekG8JoH" title="YouTube video player"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+        // Adding text and video to marker
+        markerEnger.bindPopup(textContent + videoContent);
 
-        // Add a marker for The Portland Malt Shoppe
+        // Create marker for The Portland Malt Shoppe
         const markerMalt = L.marker([46.793139, -92.089556]).addTo(map);
-        markerMalt.bindPopup("<b>The Portland Malt Shoppe</b><br>Best malts in town! It was formerly the Northwestern Oil company gas station.").openPopup();
+        markerMalt.bindPopup("<b>The Portland Malt Shoppe</b><br>Best malts in town!<br> Check out the view of the Lake from the pier.<br>\
+        <img src='https://www.portlandmaltshoppe.com/39927809_2317815018235427_1689520150040018944_n.jpg' width=315px> <em>Photo courtesy of Portland Malt Shoppe</em>").openPopup();
 
-        // Add a marker for Park Point Beach
+        // Create marker for Park Point Beach
         const markerParkPoint = L.marker([46.771778, -92.088000]).addTo(map);
-        markerParkPoint.bindPopup("<b>Park Point Beach</b><br>The world's longest freshwater sandbar!").openPopup();
+        markerParkPoint.bindPopup("<b>Park Point Beach</b><br>The world's longest freshwater sandbar! <br>\
+        <img src='https://media.vrbo.com/lodging/27000000/26510000/26506900/26506812/86205d72.jpg?impolicy=resizecrop&rw=575&rh=575&ra=fill' width=315px> <em>Photo courtesy of VRBO</em>").openPopup();
+        
+        // Add description box to map
+        let description = L.control({position: "bottomleft"});
+        description.onAdd = function() {
+            let div = L.DomUtil.create("div", "description");
+            div.innerHTML = 
+                `<p>This is a map of Duluth, MN, located just off Lake Superior.<br> 
+                    It highlights a few of my favorite views of the city.
+                </p>
+                <ol>
+                    <li>The Portland Malt Shoppe</li>
+                    <li>Enger Park</li>
+                    <li>Park Point Beach</li>
+                </ol>`;
+            return div;
+        };
+        description.addTo(map);
     </script>
+    <!-- Photo courtesy for background image -->
+    <h4 style="text-align: right;"><em>Background photo courtesy of Duluth Passport</em></h4>
 </body>
 </html>
