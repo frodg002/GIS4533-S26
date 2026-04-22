@@ -1,0 +1,23 @@
+// Task
+// Create an attractive and informative web map for conference attendees showcasing the beautiful city of Duluth.
+
+// How you design your web page is up to you but it should have the following basic components:
+  // Interactive pop ups for each attraction that includes an image and information about the attraction
+  // Markers for each point of interest using custom icons
+  // Some tutorials you can follow:
+  // A title
+  // A description or introduction welcoming conference attendees and assisting them in using your map
+
+// Beyond these minimum requirements you are free to add content and style as you see fit. 
+// You are not constrained by the limitations of what we have done in class. For example, when a user clicks on a point of interest, you could have the information that would appear in a pop-up show up in a panel to the side of the map instead. 
+
+// Make sure you are following coding best practices. Your final code should be well-formatted, easy to read, with lots of comments documenting and explaining the code.
+
+// What to Submit: 
+  // A document that includes the following information:
+  // A link to your web map on Github Pages (be sure to sync from your Codespace first)
+  // No more than a one-page (a couple paragraphs) discussion that describes the decisions for the way the web app was designed and implemented. Ensure the following are included:
+  // The method used to add your data to your leaflet map
+  // The symbology and classification choices made
+  // Additional content and styling you included on your web page
+  // Any issues you ran into along the way, and how you resolved them
