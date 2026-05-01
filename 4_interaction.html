@@ -51,3 +51,151 @@
 -->
 
 <!-- Paste your code from assignment 3 here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duluth School Attendance Areas</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Style Changes -->
+    <style>
+        /* Style for header background */
+        .header {
+            background-color: maroon;
+            padding: 1rem;
+            text-align: center;
+        }
+        /* Style for the text inside "header" */
+        .header h1,
+        .header h3 {
+            color: gold;
+            margin: 0.2rem 0;
+        }
+        /* Style for the layout container */
+        .layout {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 1rem;
+            margin: 1rem;
+        }
+        /* Style for the description text */
+        .description {
+            flex: 1 1 40%;
+            min-width: 260px;
+        }
+        /* Add border and formatting to map */
+        #map {
+            flex: 1 1 55%;
+            min-width: 320px;
+            min-height: 60vh;
+            border: 4px solid black;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header at the top of the page -->
+    <div class="header">
+        <h1 style="font-family: monospace, serif; font-size: 50px; text-align: center;">Duluth School Attendance Areas</h1>
+        <h3 style="font-family: monospace, serif; text-align: center;">by William Frodge</h3>
+    </div>
+    <!-- Layout container for description and map -->
+    <div class="layout">
+        <div class="description">
+            <h2 style="font-family: monospace, serif; text-align: left;">This map shows school attendance areas for the Duluth Public School Districts. <br>
+                The data was sourced from the Minnesota Department of Education and located on Minnesota Geospatial Commons. <br>
+                Click on a district to see the schools that serve the area.
+            </h2>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize the map, center it on UMD campus, and set the zoom level
+        const map = L.map('map').setView([46.82, -92.08], 10);
+
+        // Add CARTODB tiles
+        var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO </a>' +
+                         '| Data source: <a href="https://education.mn.gov/mde/index.htm" target="_blank">Minnesota Department of Education</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        //Create random colors to apply to geojson data
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+        return color;
+        }
+
+        // Obtain school data from csv file
+        fetch("duluth_schools.csv")
+                    .then(response => response.text())
+                    .then(csvData => {
+                        L.geoCsv(csvData, {
+                            onEachFeature: function (feature, layer) {
+                                // This creates a popup for each marker created by the CSV
+                                layer.bindPopup(feature.properties.MDENAME);
+                            },
+                            pointToLayer: function (feature, latlng) {
+                                return L.marker(latlng, {
+                                    icon: L.icon({
+                                        iconUrl: "school_icon.png",
+                                        iconSize: [40, 40]
+                                    })
+                                });
+                            }
+                        }).addTo(map);
+                    });
+
+        // Create a marker for each school in the CSV file
+        // var marker = L.marker([Lat, Lng], {
+        //     opacity: 1,
+        //     // Customize icon
+        //     icon: L.icon({
+        //         iconUrl: '<a href="https://www.flaticon.com/free-icons/school" title="school icons">School icons created by Phoebeicons - Flaticon</a>',
+        //         iconSize: [40, 60]
+        //     })
+        // }).bindPopup(MDENAME);
+
+        // Obtain school data from geojson
+        fetch("duluth_school_attendance_areas.json")
+            .then(response => response.json())
+            .then(data => {
+                //Display data
+                L.geoJSON(data, {
+                    //Random color style
+                    style: function(feature) {
+                        return {
+                            fillColor: getRandomColor(),
+                            color: "black",       
+                            weight: 1,
+                            fillOpacity: 0.3
+                        };
+                    },
+                    //Display specific properties (schools) on click
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties) {
+                            const popUpSchools = "<strong>" + "Public School District" + "</strong>" + "<br>" +
+                                            "Elementary: " + feature.properties.ELEM_NAME + "<br>" +
+                                            "Middle School: " + feature.properties.MIDD_NAME + "<br>" +
+                                            "High School: " + feature.properties.HIGH_NAME;
+                            layer.bindPopup(popUpSchools);
+                        }
+                    }
+                    }).addTo(map);
+                })
+    </script>
+</body>
+</html>

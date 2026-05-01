@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Dental Congress Event</title>
+    
+    <!-- Leaflet CSS stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Style Changes -->
+    <style>
+        /* Style for the header text */
+        .headerText {
+            background-color: #2555ada9;
+            color: white;  
+            padding: 20px;            
+            text-align: center;
+            h1, h2, h3 {
+                margin: 5px 0; /* Default margins were too far apart */
+            }
+        }
+        /* Style for the header images */
+        .headerImages {
+            background-color: #2555ada9;
+            padding: 30px;      
+            display: flex;           /* Uses flexbox to layout the images side by side */
+            justify-content: center; /* Centers the images horizontally */
+            align-items: center;     /* Aligns them vertically */
+            gap: 250px;              /* Adds space between the images */
+        }
+        /* Sets the font color, padding, and text alignment for the body text */ 
+        .body {
+            color: black;  
+            padding: 50px;       
+            display: flex;           /* Uses flexbox to layout the video and text side by side */
+            justify-content: center; /* Centers the video and text horizontally */
+            align-items: center;     /* Aligns them vertically */
+            gap: 10px;               /* Adds space between the them */
+        }
+        /* Adding flex 1 to the .body above wasn't working. Making this seperate for each element works though */
+        .body h3, iframe {
+            flex: 1;                 /* Text and video will only take up half of the body */
+        }
+
+        /* Add border around map and margins */
+        #map {
+            border: 4px solid rgb(12, 47, 145);
+            margin-top: 20px;
+            margin-bottom: 50px;
+        } 
+    </style>
+</head>
+<body>
+    <!-- Header text -->
+    <div class="headerText">
+        <h1 style="font-size: 70px;">2026 FDI World Dental Congress Event</h1>
+        <h2 style="font-size: 50px;">Duluth, Minnesota</h2>
+        <h3 style="font-size: 30px;">September 4-7th, 2026</h3>
+    </div>
+
+    <!-- Header images -->
+    <div class="headerImages">
+        <img src="https://www.fdiworlddental.org/themes/custom/ino_basetheme/assets/img/fdi-logo.png" 
+            alt="FDI Logo" 
+            style="width: 450px;">
+        <img src="https://mntrips.com/wp-content/uploads/2021/09/minnesota-duluth-river-walk.jpg" 
+            alt="Duluth Lake Walk" 
+            style="width: 400px; border-radius: 5px; border: 3px solid black;">
+    </div>
+
+    <!-- Body content -->
+    <div class="body">
+        <h3 style="font-family: monospace, serif; font-size: 20px;"> <br> Each year, FDI World Dental Congress (WDC) provides a unique platform for dental professionals to come together
+            for four days of collaboration, education, and inspiration. In 2026, we are proud to host this prestigious event in Duluth, Minnesota, a region steeped in history, culture, and breathtaking views.<br><br>
+            As we gather against the stunning background of Lake Superior, we look forward to an enlightening journey into the latest advancements in dentistry. This Congress will feature a cutting-edge scientific programme, 
+            offering a wealth of continuing education (CE) accredited sessions and engaging interactive forums on a range of dentistry-related topics. Moreover, attendees will get the opportunity to discover the 
+            latest innovations in the field at the expansive industry exhibition. <br><br> Whether you are a practitioner, researcher, student, industry representative, or a part of the dental team, we cannot wait to welcome 
+            you for the 2026 FDI WDC in Duluth. This is a great platform to foster connections, share knowledge, and shape the future of oral health and dentistry. Together let’s seize this unparalleled opportunity to learn,
+            network and innovate. </h3>
+        <iframe width="75%" height="400" 
+            src="https://www.youtube.com/embed/UH5SGQxge-Y?si=tCTAr2tKfOjTf5AF" 
+            title="YouTube video player" 
+            frameborder="0" allow="accelerometer;autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
+            web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <!-- Text above map. Kept out of div "body" because of flex properties -->
+    <h2 style="font-family: monospace, serif; font-size: 30px; text-align: center; color:rgb(16, 64, 196)">Explore Duluth with the interactive map below!</h2>
+
+    <!-- Dimensions of map -->
+    <div id="map" style="width: 80%; height: 600px; margin-left: 10%;"></div>
+    
+    <!-- Leaflet JavaScript library -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- PapaParse Javascript library for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
+    <script>
+        // Initialize the map, center it on Duluth, and set the zoom level
+        const map = L.map('map').setView([46.78355, -92.10594], 11);
+
+        // Add Esri National Geographic tiles
+        var Esri_NatGeoWorldMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	        attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+	        maxZoom: 16
+        }).addTo(map);
+
+    //ICONS
+        // Aerial Lift Bridge
+        const bridgeIcon = L.icon({
+            iconUrl: 'FDI_Icons/bridge.png',
+            iconSize: [40, 50],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Enger Park
+        const engerIcon = L.icon({
+            iconUrl: 'FDI_Icons/tower.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Portland Malte Shoppe
+        const maltIcon = L.icon({
+            iconUrl: 'FDI_Icons/ice-cream.png',
+            iconSize: [30, 40],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Great Lakes Aquarium
+        const aquariumIcon = L.icon({
+            iconUrl: 'FDI_Icons/fish.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Park Point Beach
+        const beachIcon = L.icon({
+            iconUrl: 'FDI_Icons/sun-umbrella.png',
+            iconSize: [35, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // North Shore Scenic Railroad
+        const trainIcon = L.icon({
+            iconUrl: 'FDI_Icons/train.png',
+            iconSize: [35, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Jay Cooke State Park
+        const parkIcon = L.icon({
+            iconUrl: 'FDI_Icons/pine-tree.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Gleensheen Mansion
+        const mansionIcon = L.icon({
+            iconUrl: 'FDI_Icons/mansion.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Canal Park
+        const shoppingIcon = L.icon({
+            iconUrl: 'FDI_Icons/shopping-bag.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        // Spirit Mountain Recreation Area
+        const mountainIcon = L.icon({
+            iconUrl: 'FDI_Icons/snowed-mountains.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        // Collect data from CSV file
+        fetch('Duluth Points of Interest.csv')
+            .then(response => response.text()) // Convert file to text
+            .then(csvData => { 
+                Papa.parse(csvData, {  // Refereces the PapaParse library for CSV parsing
+                    header: true,      // Consider the first row of the CSV as headers
+                    complete: function(results) {
+                        results.data.forEach(point => {  // Go through and find lat and lng for each location. Point is each header row in the CSV file
+                            let lat = point['Latitude']; // "let" allows the lat and lng of each location to change
+                            let lng = point['Longitude'];
+
+                            // Create custom icon for each location based on the attraction name
+                            if (point.Attraction == "Aerial Lift Bridge") {
+                                customIcon = bridgeIcon;
+                            } else if (point.Attraction == "Enger Park") {
+                                customIcon = engerIcon;
+                            } else if (point.Attraction == "The Portland Malt Shoppe") {
+                                customIcon = maltIcon;
+                            } else if (point.Attraction == "Great Lakes Aquarium") {
+                                customIcon = aquariumIcon;
+                            } else if (point.Attraction == "Park Point Beach") {
+                                customIcon = beachIcon;
+                             } else if (point.Attraction == "North Shore Scenic Railroad") {
+                                customIcon = trainIcon;
+                            } else if (point.Attraction == "Jay Cooke State Park") {
+                                customIcon = parkIcon;
+                            } else if (point.Attraction == "Glensheen") {
+                                customIcon = mansionIcon;
+                            } else if (point.Attraction == "Canal Park") {
+                                customIcon = shoppingIcon;
+                            } else if (point.Attraction == "Spirit Mountain Recreation Area") {
+                                customIcon = mountainIcon;
+                            }
+                            // Create marker and popup for each location, based on lat and lng. Add photo, description, and website link.
+                            if (lat && lng) {
+                                const popupMarker = `<div style="width: 250px;">
+                                    <img src="${point['Photo URL']}" style="width:100%; border-radius:8px;">  
+                                    <h3 style="margin: 10px 0 5px 0;">${point.Attraction}</h3>                
+                                    <p style="font-size: 13px;">${point.Description}</p>               
+                                    <a href="${point.Website}" target="_blank">Learn More</a>   
+                                    </div>`;
+                                L.marker([lat, lng], {icon: customIcon}).addTo(map).bindPopup(popupMarker); // Add marker to map and bind the popup to it
+                            }
+                        });
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
